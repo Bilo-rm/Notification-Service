@@ -35,12 +35,13 @@ const Subscribe = () => {
         },
         body: JSON.stringify({ email }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         setMessage('Successfully subscribed! Please check your email to confirm.');
         setEmail('');
+        setTimeout(() => setMessage(''), 5000); // Clear message after 5 seconds
       } else {
         setError(data.error || 'Subscription failed. Please try again.');
       }
@@ -52,11 +53,11 @@ const Subscribe = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-6">Subscribe to Updates</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 mb-2">
+    <div className="max-w-md mx-auto mt-10 p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-2xl border border-gray-100">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Subscribe to Updates</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
             Email Address
           </label>
           <input
@@ -64,23 +65,37 @@ const Subscribe = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500 ${
+            className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
               error ? 'border-red-500' : 'border-gray-300'
             }`}
             disabled={isLoading}
+            placeholder="Enter your email"
           />
-          {error && <p className="mt-1 text-red-500 text-sm">{error}</p>}
+          {error && (
+            <div className="mt-2 p-2 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
         </div>
         <button
           type="submit"
-          className={`w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50`}
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
           disabled={isLoading}
         >
-          {isLoading ? 'Subscribing...' : 'Subscribe'}
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <span className="mr-2">Subscribing...</span>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            'Subscribe'
+          )}
         </button>
       </form>
       {message && (
-        <p className="mt-4 text-center text-green-600">{message}</p>
+        <div className="mt-6 p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm text-center">
+          {message}
+        </div>
       )}
     </div>
   );
